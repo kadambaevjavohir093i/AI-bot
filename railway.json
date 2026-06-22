@@ -6,6 +6,11 @@
   "deploy": {
     "startCommand": "python run_inspection.py",
     "healthcheckPath": "/",
-    "restartPolicyType": "ON_FAILURE"
+    "restartPolicyType": "ON_FAILURE",
+    "volumes": [
+      {
+        "mountPath": "/data"
+      }
+    ]
   }
 }

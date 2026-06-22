@@ -1,13 +1,18 @@
 import sqlite3
 import hashlib
+import os
 import secrets
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 
-BASE_DIR = Path(__file__).parent
-DB_PATH = BASE_DIR / "inspection.db"
-UPLOAD_DIR = BASE_DIR / "uploads"
-PDF_DIR = BASE_DIR / "pdfs"
+# DATA_DIR can point at a persistent volume (e.g. Railway volume mounted at
+# /data). Defaults to this package's directory for local development.
+DATA_DIR = Path(os.environ.get("DATA_DIR") or Path(__file__).parent)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+DB_PATH = DATA_DIR / "inspection.db"
+UPLOAD_DIR = DATA_DIR / "uploads"
+PDF_DIR = DATA_DIR / "pdfs"
 
 UPLOAD_DIR.mkdir(exist_ok=True)
 PDF_DIR.mkdir(exist_ok=True)

@@ -7,8 +7,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Create runtime directories
-RUN mkdir -p inspection/uploads inspection/pdfs
+# Persistent data directory (mounted as a Railway volume at /data)
+ENV DATA_DIR=/data
+RUN mkdir -p /data/uploads /data/pdfs
 
 EXPOSE 8080
 
