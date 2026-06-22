@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ place.name }} – Checklist</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/admin" class="nav-brand">← Admin</a>
+    <a href="/inspect/{{ place.id }}" class="btn btn-sm btn-secondary" target="_blank">Preview</a>
+  </nav>
+  <main class="container">
+    <div class="admin-header">
+      <div>
+        <h1>{{ place.name }}</h1>
+        {% if place.description %}<p class="subtitle">{{ place.description }}</p>{% endif %}
+      </div>
+      <div>
+        <a href="/admin/places/new" class="btn btn-outline btn-sm">Edit Info</a>
+        <form method="POST" action="/admin/places/{{ place.id }}/delete"
+              onsubmit="return confirm('Delete this place and ALL its data?')"
+              style="display:inline">
+          <button class="btn btn-sm btn-danger">Delete Place</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Section -->
+    <div class="card" style="margin-bottom:1.5rem">
+      <h3>Add Section</h3>
+      <form method="POST" action="/admin/places/{{ place.id }}/sections/add" class="inline-form">
+        <input type="text" name="name" placeholder="Section name (e.g. INTERIOR)" required>
+        <button type="submit" class="btn btn-primary btn-sm">Add Section</button>
+      </form>
+    </div>
+
+    <!-- Sections & Items -->
+    {% for sec, items in sections_with_items %}
+      <div class="section-admin-block">
+        <div class="section-admin-header">
+          <span>{{ sec.name }}</span>
+          <form method="POST" action="/admin/sections/{{ sec.id }}/delete"
+                onsubmit="return confirm('Delete section {{ sec.name }} and all its items?')"
+                style="display:inline">
+            <input type="hidden" name="place_id" value="{{ place.id }}">
+            <button class="btn btn-xs btn-danger">✕ Remove Section</button>
+          </form>
+        </div>
+
+        <!-- Existing items -->
+        {% if items %}
+          <table class="data-table" style="margin-bottom:0.5rem">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Type</th>
+                <th>Photo?</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items %}
+                <tr>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.item_type }}</td>
+                  <td>{{ '✓' if item.require_photo else '—' }}</td>
+                  <td>
+                    <form method="POST" action="/admin/items/{{ item.id }}/delete"
+                          onsubmit="return confirm('Delete {{ item.name }}?')"
+                          style="display:inline">
+                      <input type="hidden" name="place_id" value="{{ place.id }}">
+                      <button class="btn btn-xs btn-danger">✕</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="hint" style="margin:0.5rem 0">No items yet.</p>
+        {% endif %}
+
+        <!-- Add item form -->
+        <form method="POST" action="/admin/sections/{{ sec.id }}/items/add"
+              class="add-item-form">
+          <input type="hidden" name="place_id" value="{{ place.id }}">
+          <input type="text" name="name" placeholder="Item name" required>
+          <select name="item_type">
+            <option value="pass_fail">PASS/FAIL</option>
+            <option value="yes_no">YES/NO</option>
+            <option value="text">Text</option>
+          </select>
+          <label class="checkbox-label">
+            <input type="checkbox" name="require_photo" value="1"> Require photo
+          </label>
+          <button type="submit" class="btn btn-sm btn-secondary">+ Add Item</button>
+        </form>
+      </div>
+    {% endfor %}
+
+    {% if not sections_with_items %}
+      <div class="empty-state">No sections yet. Add a section above to start building the checklist.</div>
+    {% endif %}
+  </main>
+</body>
+</html>

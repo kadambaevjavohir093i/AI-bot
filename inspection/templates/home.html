@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Select a Place{% endblock %}
+{% block content %}
+<h1 class="page-title">Select a Place to Inspect</h1>
+
+{% if places %}
+  <div class="place-grid">
+    {% for place in places %}
+      <a href="/inspect/{{ place.id }}" class="place-card">
+        <div class="place-icon">📍</div>
+        <div class="place-name">{{ place.name }}</div>
+        {% if place.description %}
+          <div class="place-desc">{{ place.description }}</div>
+        {% endif %}
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <p>No places have been added yet.</p>
+    {% if is_admin %}
+      <a href="/admin/places/new" class="btn btn-primary">Add First Place</a>
+    {% else %}
+      <p>Ask an admin to add inspection places.</p>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

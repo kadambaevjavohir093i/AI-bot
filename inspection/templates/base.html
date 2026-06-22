@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>{% block title %}Inspection App{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">📋 Inspections</a>
+    <div class="nav-links">
+      {% if is_admin is defined and is_admin %}
+        <a href="/admin">Admin</a>
+        <a href="/admin/logout">Logout</a>
+      {% else %}
+        <a href="/admin/login">Admin</a>
+      {% endif %}
+    </div>
+  </nav>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

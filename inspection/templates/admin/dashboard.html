@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">📋 Inspections</a>
+    <div class="nav-links">
+      <a href="/admin/inspections">Inspections</a>
+      <a href="/admin/logout">Logout</a>
+    </div>
+  </nav>
+  <main class="container">
+    <div class="admin-header">
+      <h1>Admin Dashboard</h1>
+      <a href="/admin/places/new" class="btn btn-primary">+ Add Place</a>
+    </div>
+
+    <h2>Places</h2>
+    {% if places %}
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in places %}
+              <tr>
+                <td><a href="/admin/places/{{ p.id }}">{{ p.name }}</a></td>
+                <td>{{ p.description or '—' }}</td>
+                <td class="actions">
+                  <a href="/admin/places/{{ p.id }}" class="btn btn-sm btn-secondary">Edit</a>
+                  <form method="POST" action="/admin/places/{{ p.id }}/delete"
+                        onsubmit="return confirm('Delete {{ p.name }}?')" style="display:inline">
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty-state">No places yet. <a href="/admin/places/new">Add one →</a></div>
+    {% endif %}
+
+    <h2 style="margin-top:2rem">Recent Inspections</h2>
+    {% if inspections %}
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Place</th>
+              <th>Inspector</th>
+              <th>Date</th>
+              <th>PDF</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in inspections[:10] %}
+              <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.place_name }}</td>
+                <td>{{ i.inspector_name }}</td>
+                <td>{{ i.completed_at or i.started_at }}</td>
+                <td>
+                  {% if i.pdf_path %}
+                    <a href="/admin/inspections/{{ i.id }}/pdf" class="btn btn-sm btn-secondary">Download</a>
+                  {% else %}—{% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <a href="/admin/inspections" class="btn btn-outline" style="margin-top:1rem">View All</a>
+    {% else %}
+      <div class="empty-state">No inspections yet.</div>
+    {% endif %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Inspection Complete{% endblock %}
+{% block content %}
+<div class="done-wrapper">
+  <div class="done-icon">✅</div>
+  <h1>Inspection Complete!</h1>
+  <p class="done-place">{{ inspection.place_name }}</p>
+  <p>Inspector: <strong>{{ inspection.inspector_name }}</strong></p>
+  <p>Completed: <strong>{{ inspection.completed_at }}</strong></p>
+
+  {% if inspection.inspector_telegram_id %}
+    <div class="alert alert-success">
+      PDF report sent to your Telegram!
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      Set your Telegram chat ID next time to receive the PDF directly.
+    </div>
+  {% endif %}
+
+  {% if inspection.drive_url %}
+    <a href="{{ inspection.drive_url }}" target="_blank" class="btn btn-secondary">
+      📁 View on Google Drive
+    </a>
+  {% endif %}
+
+  <a href="/done/{{ inspection.id }}/pdf" class="btn btn-primary">
+    📄 Download PDF
+  </a>
+
+  <a href="/" class="btn btn-outline">Start Another Inspection</a>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <h1>🔐 Admin Login</h1>
+      {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+      {% endif %}
+      <form method="POST" action="/admin/login" class="auth-form">
+        <label>Username
+          <input type="text" name="username" required autocomplete="username">
+        </label>
+        <label>Password
+          <input type="password" name="password" required autocomplete="current-password">
+        </label>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </form>
+      <a href="/" class="back-link">← Back to inspections</a>
+    </div>
+  </div>
+</body>
+</html>

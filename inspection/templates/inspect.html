@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Inspect – {{ place.name }}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">📋 Inspections</a>
+    <span class="nav-place">{{ place.name }}</span>
+  </nav>
+
+  <div class="progress-bar" id="progressBar"></div>
+
+  <main class="container">
+    <h1 class="page-title">{{ place.name }}</h1>
+    <p class="subtitle">{{ company_name }}</p>
+
+    <form method="POST" action="/inspect/{{ place.id }}/submit"
+          enctype="multipart/form-data" id="inspectForm">
+
+      <!-- Inspector info -->
+      <div class="card inspector-card">
+        <h2>Inspector Information</h2>
+        <label>Your Name <span class="required">*</span>
+          <input type="text" name="inspector_name" required
+                 placeholder="Full name" autocomplete="name">
+        </label>
+        <label>Telegram Chat ID
+          <input type="text" name="inspector_telegram"
+                 placeholder="e.g. 123456789 (find via @userinfobot)">
+          <span class="hint">Get your ID by messaging @userinfobot on Telegram</span>
+        </label>
+      </div>
+
+      <!-- Checklist sections -->
+      {% for sec_name in section_order %}
+        <div class="section-block">
+          <div class="section-header">{{ sec_name }}</div>
+
+          {% for item in sections[sec_name] %}
+            <div class="item-card" id="item-{{ item.id }}">
+              <div class="item-name">{{ item.name }}</div>
+
+              {% if item.item_type == 'pass_fail' %}
+                <div class="result-group">
+                  <label class="result-btn pass-btn">
+                    <input type="radio" name="result_{{ item.id }}" value="PASS">
+                    <span>✓ PASS</span>
+                  </label>
+                  <label class="result-btn fail-btn">
+                    <input type="radio" name="result_{{ item.id }}" value="FAIL">
+                    <span>✗ FAIL</span>
+                  </label>
+                  <label class="result-btn na-btn">
+                    <input type="radio" name="result_{{ item.id }}" value="N/A">
+                    <span>N/A</span>
+                  </label>
+                </div>
+              {% elif item.item_type == 'yes_no' %}
+                <div class="result-group">
+                  <label class="result-btn pass-btn">
+                    <input type="radio" name="result_{{ item.id }}" value="YES">
+                    <span>✓ YES</span>
+                  </label>
+                  <label class="result-btn fail-btn">
+                    <input type="radio" name="result_{{ item.id }}" value="NO">
+                    <span>✗ NO</span>
+                  </label>
+                </div>
+              {% else %}
+                <input type="text" name="result_{{ item.id }}"
+                       placeholder="Enter value..." class="text-result">
+              {% endif %}
+
+              <div class="detail-photo">
+                <textarea name="detail_{{ item.id }}"
+                          placeholder="Details / notes (optional)"
+                          rows="2"></textarea>
+
+                <div class="photo-upload-area">
+                  <label class="photo-label {% if item.require_photo %}required{% endif %}">
+                    📷 {% if item.require_photo %}Photo Required{% else %}Add Photo{% endif %}
+                    <input type="file"
+                           name="photo_{{ item.id }}"
+                           accept="image/*"
+                           capture="environment"
+                           class="photo-input"
+                           data-preview="prev-{{ item.id }}"
+                           {% if item.require_photo %}required{% endif %}>
+                  </label>
+                  <img id="prev-{{ item.id }}" class="photo-preview" src="" alt="">
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <!-- Notes -->
+      <div class="card">
+        <label>General Notes
+          <textarea name="notes" rows="3" placeholder="Any general observations..."></textarea>
+        </label>
+      </div>
+
+      <div class="submit-area">
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
+          Submit Inspection
+        </button>
+        <p class="submit-hint">This will generate a PDF and send it via Telegram.</p>
+      </div>
+    </form>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

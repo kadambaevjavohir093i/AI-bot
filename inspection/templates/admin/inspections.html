@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Inspections</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/admin" class="nav-brand">← Admin</a>
+    <span class="nav-place">All Inspections</span>
+  </nav>
+  <main class="container">
+    <h1>Inspection History</h1>
+
+    {% if inspections %}
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Place</th>
+              <th>Inspector</th>
+              <th>Telegram ID</th>
+              <th>Started</th>
+              <th>Completed</th>
+              <th>Drive</th>
+              <th>PDF</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in inspections %}
+              <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.place_name }}</td>
+                <td>{{ i.inspector_name }}</td>
+                <td>{{ i.inspector_telegram_id or '—' }}</td>
+                <td>{{ i.started_at }}</td>
+                <td>{{ i.completed_at or '—' }}</td>
+                <td>
+                  {% if i.drive_url %}
+                    <a href="{{ i.drive_url }}" target="_blank" class="btn btn-xs btn-secondary">Drive</a>
+                  {% else %}—{% endif %}
+                </td>
+                <td>
+                  {% if i.pdf_path %}
+                    <a href="/admin/inspections/{{ i.id }}/pdf" class="btn btn-xs btn-primary">PDF</a>
+                  {% else %}—{% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty-state">No inspections recorded yet.</div>
+    {% endif %}
+  </main>
+</body>
+</html>
