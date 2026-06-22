@@ -14,4 +14,5 @@ GOOGLE_SERVICE_ACCOUNT_FILE = os.environ.get("GOOGLE_SERVICE_ACCOUNT_FILE", "")
 # Google Drive folder ID where inspections will be uploaded
 GOOGLE_DRIVE_FOLDER_ID = os.environ.get("GOOGLE_DRIVE_FOLDER_ID", "")
 APP_HOST = os.environ.get("INSPECTION_HOST", "0.0.0.0")
-APP_PORT = int(os.environ.get("INSPECTION_PORT", "8080"))
+# Railway (and most PaaS) set PORT; fall back to INSPECTION_PORT, then 8080
+APP_PORT = int(os.environ.get("PORT") or os.environ.get("INSPECTION_PORT", "8080"))
