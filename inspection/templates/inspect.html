@@ -81,16 +81,27 @@
                           rows="2"></textarea>
 
                 <div class="photo-upload-area">
-                  <label class="photo-label {% if item.require_photo %}required{% endif %}">
-                    📷 {% if item.require_photo %}Photo Required{% else %}Add Photo{% endif %}
-                    <input type="file"
-                           name="photo_{{ item.id }}"
-                           accept="image/*"
-                           capture="environment"
-                           class="photo-input"
-                           data-preview="prev-{{ item.id }}"
-                           {% if item.require_photo %}required{% endif %}>
-                  </label>
+                  <!-- Camera input (hidden, triggered by button) -->
+                  <input type="file"
+                         id="cam-{{ item.id }}"
+                         name="photo_{{ item.id }}"
+                         accept="image/*"
+                         capture="environment"
+                         class="photo-input"
+                         data-preview="prev-{{ item.id }}"
+                         {% if item.require_photo %}required{% endif %}>
+                  <div class="photo-btn-row">
+                    <button type="button"
+                            class="btn btn-sm btn-camera {% if item.require_photo %}required{% endif %}"
+                            onclick="document.getElementById('cam-{{ item.id }}').click()">
+                      📷 {% if item.require_photo %}Take Photo (Required){% else %}Take Photo{% endif %}
+                    </button>
+                    <button type="button"
+                            class="btn btn-sm btn-gallery"
+                            onclick="openGallery('{{ item.id }}')">
+                      🖼 Gallery
+                    </button>
+                  </div>
                   <img id="prev-{{ item.id }}" class="photo-preview" src="" alt="">
                 </div>
               </div>

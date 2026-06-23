@@ -1,3 +1,12 @@
+// Gallery fallback: temporarily remove capture= so user can pick from files
+function openGallery(itemId) {
+  const input = document.getElementById('cam-' + itemId);
+  input.removeAttribute('capture');
+  input.click();
+  // Restore capture after dialog closes
+  setTimeout(() => input.setAttribute('capture', 'environment'), 2000);
+}
+
 // Photo preview
 document.querySelectorAll('.photo-input').forEach(input => {
   input.addEventListener('change', function () {
